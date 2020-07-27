@@ -1,0 +1,103 @@
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.pagination_div {
+  display: flex;
+}
+.pagination_div div {
+  max-width: 65px;
+  margin-left: 2%;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.favorite_image {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+}
+.delete_image {
+  width: 35px;
+  height: 35px;
+  margin-right: 5px;
+}
+
+.favorite_delete {
+  display: flex;
+  flex-direction: row;
+  width: 75px;
+}
+.maindiv {
+  max-width: 300px;
+  display: inline-block;
+  margin: 1%;
+}
+.select_categorie_class {
+  margin-top: 2%;
+}
+.list_idem {
+  display: inline-block;
+}
+.App-link {
+  color: #61dafb;
+}
+.mediaCarContainer {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #ececec;
+  border-bottom: 2px solid #df0c36;
+  margin: auto;
+}
+
+.mediaCarBody {
+  font-family: Arial;
+  font-size: 1rem;
+  line-height: 1rem;
+  color: #666;
+  padding: 5px;
+}
+.like_dislike_ration_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+.like_dislike_ration_div span {
+  margin-right: 2px;
+}
+
+.like_ration_div {
+  margin-right: 8px;
+}
+.mediaCarTitle h2 {
+  padding: 5px;
+  font-family: Arial;
+  color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.date {
+  background: #df0c36;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 50px;
+}
+
+.image {
+  width: 100%;
+}

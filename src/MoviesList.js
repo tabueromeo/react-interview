@@ -1,21 +1,22 @@
-import React, { Component, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { movies$ } from "./Helpers/movies";
 import "antd/dist/antd.css";
 import Movie from "./Movie";
 import { Pagination } from "antd";
 import MultiSelect from "@khanacademy/react-multi-select";
 
-const numEachPage = 4;
-
 class MoviesList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       currentPage: 1,
-      todosPerPage: 5,
+      moviesPerPage: 4,
       moviesList: null,
       loadingOk: false,
+      deleteMovies: [],
+      likes: [],
+      dislikes: [],
       selected: []
     };
   }
@@ -32,9 +33,14 @@ class MoviesList extends Component {
   }
 
   handleChange = value => {
-    alert(value);
     this.setState({
       currentPage: value
+    });
+  };
+
+  handleSelectChange = e => {
+    this.setState({
+      moviesPerPage: e.target.value
     });
   };
 
@@ -47,17 +53,14 @@ class MoviesList extends Component {
   render() {
     const {
       currentPage,
-      todosPerPage,
+      moviesPerPage,
       moviesList,
       loadingOk,
-      selected,
-      setSelected
+      selected
     } = this.state;
 
-    const indexOfLastTodo = currentPage * todosPerPage;
-    const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
-    const currentTodos =
-      loadingOk && moviesList.slice(indexOfFirstTodo, indexOfLastTodo);
+    const indexOfLastMovie = currentPage * moviesPerPage;
+    const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
 
     let options = [];
     let i = 0;
@@ -66,6 +69,7 @@ class MoviesList extends Component {
         val => (options[i++] = { label: val.category, value: val.id })
       );
 
+    console.log(this.props);
     return (
       <div className="container">
         <div className="select_categorie_class">
@@ -79,31 +83,32 @@ class MoviesList extends Component {
         </div>
 
         <div className="list_idem">
-          {/* <Pagination/> */}
           {loadingOk &&
             moviesList.length > 0 &&
-            moviesList.slice(indexOfFirstTodo, indexOfLastTodo).map(val => (
+            moviesList.slice(indexOfFirstMovie, indexOfLastMovie).map(val => (
               <div className="maindiv">
-                <Movie
-                  movie_category={val.category}
-                  movie_title={val.title}
-                  movie_likes={val.likes}
-                  movie_dislikes={val.dislikes}
-                  movie_id={val.id}
-                />
+                <Movie movie={val} />
               </div>
             ))}
         </div>
         <div className="pagination_div">
           <Pagination
-            defaultCurrent={1}
-            defaultPageSize={5} //default size of page
+            defaultCurrent={this.state.currentPage}
+            defaultPageSize={this.state.moviesPerPage} //default size of page
+            pageSize={this.state.moviesPerPage}
             onChange={this.handleChange}
-            total={10} //total number of card data available
+            total={loadingOk && moviesList.length > 0 && moviesList.length} //total number of card data available
           />
 
           <div class="form-group">
-            <select class="form-control" id="exampleFormControlSelect1">
+            <select
+              name="nombre_par_page"
+              class="form-control"
+              id="exampleFormControlSelect1"
+              componentClass="select"
+              value={this.state.moviesPerPage}
+              onChange={this.handleSelectChange}
+            >
               <option>4</option>
               <option>8</option>
               <option>12</option>
@@ -114,4 +119,11 @@ class MoviesList extends Component {
     );
   }
 }
-export default MoviesList;
+const mapStateToProps = state => {
+  return {
+    deleteMovies: state.deleteMovies,
+    likes: state.likes,
+    dislikes: state.dislikes
+  };
+};
+export default connect(mapStateToProps)(MoviesList);

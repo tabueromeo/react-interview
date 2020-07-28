@@ -1,12 +1,15 @@
 import React from "react";
-import logo from "./logo.svg";
+import { Provider } from "react-redux";
+import Store from "./Store/configureStore";
 import MoviesList from "./MoviesList";
 import "./App.css";
 
 function App() {
   return (
     <div className="App">
-      <MoviesList />
+      <Provider store={Store}>
+        <MoviesList />
+      </Provider>
     </div>
   );
 }

@@ -1,70 +1,92 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
+import { connect } from "react-redux";
 
 class Movie extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFilmFavorite: false
+      isFilmFavorite: false,
+      movie: null
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      movie: this.props.movie
+    });
   }
 
   _displayFavoriteImage() {
     if (this.state.isFilmFavorite /*this.props.isFilmFavorite*/) {
       // Si la props isFilmFavorite vaut true, on affiche le 🖤
-      return <img className="favorite_image" src={"/Images/ic_favorite.png"} />;
+      return (
+        <img
+          className="favorite_image"
+          alt="j'aime"
+          src={"/Images/ic_favorite.png"}
+        />
+      );
     } else {
       return (
         <img
           className="favorite_image"
           src={"/Images/ic_favorite_border.png"}
+          alt="je n'aime pas"
         />
       );
     }
   }
 
-  _toogleFavorite() {
+  _toogleLoveMovie() {
     console.log(" favorite____________________________");
     this.setState({
       isFilmFavorite: !this.state.isFilmFavorite
     });
+
+    const action = { type: "LIKE_DISLIKE", value: this.state.movie };
+    this.props.dispatch(action);
   }
 
   _deleteFilm(id) {
-    console.log(id);
+    const action = { type: "DELETE_MOVIE", value: this.state.movie };
+    this.props.dispatch(action);
   }
 
   render() {
-    // const classes = useStyles();
+    // console.log(this.props);
     return (
       <div className="x">
         <div className="mediaCarContainer">
           <div className="mediaCarHeader">
             <div className="date">
               <div className="day_month">
-                <span>{this.props.movie_category}</span>
+                <span>{this.props.movie.category}</span>
               </div>
             </div>
             <div className="mediaCardImage">
-              <img className="image" src="/contemplative-reptile.jpeg" />
+              <img
+                className="movie_image"
+                src="/contemplative-reptile.jpeg"
+                alt="photo du film"
+              />
             </div>
           </div>
           <div className="mediaCarTitle">
-            {/* <h2>Titre</h2> */}
-            <h2>{this.props.movie_title}</h2>
+            <h2>{this.props.movie.title}</h2>
           </div>
           <div className="mediaCarBody">
-            <p>
-              {this.props.category}
-              {/* Keys help React identify which items have changed, are added, or are removed. Keys should be given to the elements inside the array to give the elements a stable identity: */}
-            </p>
+            <p></p>
           </div>
           <div className="favorite_delete">
-            <div onClick={() => this._toogleFavorite()}>
+            <div onClick={() => this._toogleLoveMovie()}>
               {this._displayFavoriteImage()}
             </div>
             <div onClick={() => this._deleteFilm(this.props.movie_id)}>
-              <img className="delete_image" src={"/Images/img_408479.png"} />
+              <img
+                className="delete_image"
+                alt="supprimer"
+                src={"/Images/img_408479.png"}
+              />
             </div>
           </div>
 
@@ -72,12 +94,12 @@ class Movie extends Component {
             <div className="like_ration_div">
               <span class="glyphicon glyphicon-thumbs-up"></span>
 
-              <span>{this.props.movie_likes}</span>
+              <span>{this.props.movie.likes}</span>
             </div>
             <div className="dislike_ration_div">
               <span class="glyphicon glyphicon-thumbs-down"></span>
 
-              <span>{this.props.movie_dislikes}</span>
+              <span>{this.props.movie.dislikes}</span>
             </div>
           </div>
         </div>
@@ -85,4 +107,5 @@ class Movie extends Component {
     );
   }
 }
-export default Movie;
+
+export default connect()(Movie);

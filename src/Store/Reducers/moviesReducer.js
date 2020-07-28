@@ -1,5 +1,3 @@
-// Store/Reducers/favoriteReducer.js
-
 const initialState = { deleteMovies: [], dislikes: [], likes: [] };
 
 function toggleactionReducer(state = initialState, action) {
@@ -30,7 +28,7 @@ function toggleactionReducer(state = initialState, action) {
             (item, index) => index !== nonLoveMovieIndex
           )
         };
-
+        action.value.likes = action.value.likes + 1;
         nextState = {
           ...nextState,
           likes: [...state.likes, action.value]
@@ -41,17 +39,19 @@ function toggleactionReducer(state = initialState, action) {
           ...state,
           likes: state.likes.filter((item, index) => index !== loveMovieIndex)
         };
-        console.log(nextState.likes);
+        action.value.dislikes = action.value.dislikes + 1;
         nextState = {
           ...nextState,
           dislikes: [...state.dislikes, action.value]
         };
       } else {
+        action.value.likes = action.value.likes + 1;
         nextState = {
           ...state,
           likes: [...state.likes, action.value]
         };
       }
+
       return nextState || state;
 
     default:

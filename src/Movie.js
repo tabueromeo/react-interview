@@ -5,8 +5,7 @@ class Movie extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isFilmFavorite: false,
-      movie: null
+      isFilmFavorite: false
     };
   }
 
@@ -17,7 +16,7 @@ class Movie extends Component {
   }
 
   _displayFavoriteImage() {
-    if (this.state.isFilmFavorite /*this.props.isFilmFavorite*/) {
+    if (this.props.movie.isFilmFavorite) {
       // Si la props isFilmFavorite vaut true, on affiche le 🖤
       return (
         <img
@@ -38,32 +37,33 @@ class Movie extends Component {
   }
 
   _toogleLoveMovie() {
-    console.log(" favorite____________________________");
     this.setState({
       isFilmFavorite: !this.state.isFilmFavorite
     });
+    this.props.movie.isFilmFavorite = !this.props.movie.isFilmFavorite;
 
-    const action = { type: "LIKE_DISLIKE", value: this.state.movie };
+    const action = { type: "LIKE_DISLIKE", value: this.props.movie };
     this.props.dispatch(action);
   }
 
   _deleteFilm(id) {
-    const action = { type: "DELETE_MOVIE", value: this.state.movie };
+    const action = { type: "DELETE_MOVIE", value: this.props.movie };
+
     this.props.dispatch(action);
+    this.props.handleclique(this.props.movie);
   }
 
   render() {
-    // console.log(this.props);
     return (
       <div className="x">
-        <div className="mediaCarContainer">
-          <div className="mediaCarHeader">
-            <div className="date">
-              <div className="day_month">
+        <div className="movieCarContainer">
+          <div className="movieCarHeader">
+            <div className="caterogy">
+              <div>
                 <span>{this.props.movie.category}</span>
               </div>
             </div>
-            <div className="mediaCardImage">
+            <div className="movieCardImage">
               <img
                 className="movie_image"
                 src="/contemplative-reptile.jpeg"
@@ -71,17 +71,17 @@ class Movie extends Component {
               />
             </div>
           </div>
-          <div className="mediaCarTitle">
+          <div className="movieCarTitle">
             <h2>{this.props.movie.title}</h2>
           </div>
-          <div className="mediaCarBody">
+          <div className="movieCarBody">
             <p></p>
           </div>
           <div className="favorite_delete">
             <div onClick={() => this._toogleLoveMovie()}>
               {this._displayFavoriteImage()}
             </div>
-            <div onClick={() => this._deleteFilm(this.props.movie_id)}>
+            <div onClick={() => this._deleteFilm()}>
               <img
                 className="delete_image"
                 alt="supprimer"
@@ -108,4 +108,11 @@ class Movie extends Component {
   }
 }
 
-export default connect()(Movie);
+const mapStateToProps = state => {
+  return {
+    deleteMovies: state.deleteMovies,
+    isFilmFavorite: state.isFilmFavorite
+  };
+};
+
+export default connect(mapStateToProps)(Movie);

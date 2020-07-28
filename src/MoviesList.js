@@ -11,22 +11,56 @@ class MoviesList extends Component {
     super(props);
     this.state = {
       currentPage: 1,
-      moviesPerPage: 4,
+      moviesPerPage: 8,
       moviesList: null,
       loadingOk: false,
-      deleteMovies: [],
       likes: [],
+      listCatergorie: [],
       dislikes: [],
-      selected: []
+      selected: [],
+      elementAreDelete: false
     };
+    this.deletehandle = this.deletehandle.bind(this);
+  }
+
+  filterDeleteMovie(movies) {
+    let tmp_movies = [];
+    movies.map(movie => {
+      if (!this.props.deleteMovies.includes(movie)) {
+        tmp_movies.push(movie);
+      }
+    });
+
+    return tmp_movies;
+  }
+
+  deletehandle() {
+    this.setState({
+      elementAreDelete: true
+    });
+  }
+
+  filterListcategorie(movies) {
+    let tmp_listCatergorie = [];
+    movies.map(val => {
+      if (!tmp_listCatergorie.includes(val.category)) {
+        tmp_listCatergorie.push(val.category);
+      }
+    });
+    this.setState({
+      listCatergorie: tmp_listCatergorie
+    });
   }
 
   componentDidMount() {
     movies$.then(movies => {
+      this.filterListcategorie(this.filterDeleteMovie(movies));
+
       this.setState(state => {
         return {
           moviesList: movies,
-          loadingOk: true
+          loadingOk: true,
+          selected: this.state.listCatergorie
         };
       });
     });
@@ -40,13 +74,28 @@ class MoviesList extends Component {
 
   handleSelectChange = e => {
     this.setState({
-      moviesPerPage: e.target.value
+      moviesPerPage: e.target.value,
+      currentPage: 1
     });
   };
 
-  setSelected = value => {
-    this.setState({
-      selected: [value]
+  handleSelectCategorieChange = selected => {
+    this.setState({ selected });
+    let movie_tmps = [];
+
+    movies$.then(movies => {
+      this.filterDeleteMovie(movies).map(val => {
+        if (this.state.selected.includes(val.category)) {
+          movie_tmps.push(val);
+        }
+      });
+
+      this.setState(state => {
+        return {
+          moviesList: movie_tmps,
+          loadingOk: true
+        };
+      });
     });
   };
 
@@ -55,6 +104,7 @@ class MoviesList extends Component {
       currentPage,
       moviesPerPage,
       moviesList,
+      listCatergorie,
       loadingOk,
       selected
     } = this.state;
@@ -65,11 +115,17 @@ class MoviesList extends Component {
     let options = [];
     let i = 0;
     loadingOk &&
-      moviesList.map(
-        val => (options[i++] = { label: val.category, value: val.id })
-      );
+      listCatergorie.map(val => (options[i++] = { label: val, value: val }));
 
-    console.log(this.props);
+    if (this.state.elementAreDelete) {
+      let movies_temp = this.filterDeleteMovie(this.state.moviesList);
+      this.filterListcategorie(movies_temp);
+      this.setState({
+        moviesList: movies_temp,
+        elementAreDelete: false
+      });
+    }
+
     return (
       <div className="container">
         <div className="select_categorie_class">
@@ -78,7 +134,7 @@ class MoviesList extends Component {
           <MultiSelect
             options={options}
             selected={selected}
-            onSelectedChanged={selected => this.setState({ selected })}
+            onSelectedChanged={this.handleSelectCategorieChange}
           />
         </div>
 
@@ -87,7 +143,7 @@ class MoviesList extends Component {
             moviesList.length > 0 &&
             moviesList.slice(indexOfFirstMovie, indexOfLastMovie).map(val => (
               <div className="maindiv">
-                <Movie movie={val} />
+                <Movie movie={val} handleclique={this.deletehandle} />
               </div>
             ))}
         </div>

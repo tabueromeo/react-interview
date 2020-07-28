@@ -50,7 +50,7 @@
 .App-link {
   color: #61dafb;
 }
-.mediaCarContainer {
+.movieCarContainer {
   display: flex;
   flex-direction: column;
   border: 2px solid #ececec;
@@ -58,7 +58,7 @@
   margin: auto;
 }
 
-.mediaCarBody {
+.movieCarBody {
   font-family: Arial;
   font-size: 1rem;
   line-height: 1rem;
@@ -78,7 +78,7 @@
 .like_ration_div {
   margin-right: 8px;
 }
-.mediaCarTitle h2 {
+.movieCarTitle h2 {
   padding: 5px;
   font-family: Arial;
   color: #666;
@@ -87,7 +87,7 @@
   align-items: center;
 }
 
-.date {
+.caterogy {
   background: #df0c36;
   color: #fff;
   display: flex;
